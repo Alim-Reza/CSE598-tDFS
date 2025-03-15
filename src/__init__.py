@@ -1,1 +1,1 @@
-from .custom_tensor import CustomTensor
+from src.custom_tensor import CustomTensor

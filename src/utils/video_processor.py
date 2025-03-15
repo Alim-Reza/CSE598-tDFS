@@ -55,8 +55,8 @@ def load_video_chunk(chunk_path):
         return pickle.load(f)
 
 # Example usage
-video_path = 'c:\\Users\\asif\\Documents\\CSE598-tDFS\\src\\main_video.mp4'
-chunks_dir = 'c:\\Users\\asif\\Documents\\CSE598-tDFS\\video_chunks'
+video_path = 'E:\\CSE598-tDFS\\data\\raw\\videos\\main_video.mp4'
+chunks_dir = 'E:\\CSE598-tDFS\\data\\processed\\video_chunks'
 
 # Split video into chunks of 100 frames each
 chunk_video_to_pickles(video_path, chunks_dir, frames_per_chunk=100)

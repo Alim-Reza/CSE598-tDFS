@@ -1,1 +1,1 @@
-from .video_processing import chunk_video_to_pickles, load_video_chunk
+from src.utils.video_processor import chunk_video_to_pickles, load_video_chunk
