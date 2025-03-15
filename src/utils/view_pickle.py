@@ -1,5 +1,7 @@
 import pickle
 import os
+import cv2
+import numpy as np
 
 def view_pickle_content(pickle_path):
     with open(pickle_path, 'rb') as f:
@@ -13,17 +15,59 @@ def view_pickle_content(pickle_path):
         frames = data['frames']
         if isinstance(frames, list):
             print(f"\nFrames is a list with length: {len(frames)}")
-            if frames:  # If list is not empty
+            if frames:
                 print(f"First frame type: {type(frames[0])}")
                 if hasattr(frames[0], 'shape'):
                     print(f"First frame shape: {frames[0].shape}")
-        else:
-            print(f"\nFrames shape: {frames.shape}")
-            print(f"Frames dtype: {frames.dtype}")
+                
+                while True:
+                    frame_idx = input("\nEnter frame number (0-{}) or 'q' to quit: ".format(len(frames)-1))
+                    if frame_idx.lower() == 'q':
+                        break
+                    
+                    try:
+                        idx = int(frame_idx)
+                        if 0 <= idx < len(frames):
+                            frame = frames[idx]
+                            while True:
+                                view_type = input("\nView as (1) Image or (2) Array data or (b) Back: ")
+                                
+                                if view_type == '1':
+                                    cv2.imshow(f'Frame {idx}', frame)
+                                    cv2.waitKey(0)
+                                    cv2.destroyAllWindows()
+                                elif view_type == '2':
+                                    print(f"\nFrame {idx} data:")
+                                    print(f"Array shape: {frame.shape}")
+                                    print(f"Data type: {frame.dtype}")
+                                    print(f"Min value: {np.min(frame)}")
+                                    print(f"Max value: {np.max(frame)}")
+                                    print(f"Mean value: {np.mean(frame)}")
+                                    
+                                    # Show a sample from different parts of the array
+                                    print("\nSample values from different parts of the array:")
+                                    h, w = frame.shape[:2]
+                                    print(f"Top-left corner (5x5):\n{frame[:5, :5]}")
+                                    print(f"\nCenter (5x5):\n{frame[h//2-2:h//2+3, w//2-2:w//2+3]}")
+                                    
+                                    view_full = input("\nView full array? (y/n): ")
+                                    if view_full.lower() == 'y':
+                                        np.set_printoptions(threshold=np.inf)
+                                        print("\nFull array:")
+                                        print(frame)
+                                        np.set_printoptions(threshold=1000)
+                                elif view_type.lower() == 'b':
+                                    break
+                                else:
+                                    print("Invalid option!")
+                        else:
+                            print("Invalid frame index!")
+                    except ValueError:
+                        print("Please enter a valid number or 'q'")
     
     # Print other metadata if exists
     for key in data:
-        if key != 'frames':  # Skip frames as we already showed its info
+        if key != 'frames':
             print(f"\n{key}: {data[key]}")
 
 if __name__ == "__main__":
