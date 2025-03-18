@@ -1,40 +1,13 @@
-from src.custom_tensor import CustomTensor
-from src.utils.video_processor import load_video_chunk
+# from src.custom_tensor import CustomTensor
+# from src.utils.video_processor import load_video_chunk
 from src.pickle_tensor import PickleTensor
 import os
 
-# def process_video_chunks(
-#     directory: str = os.path.join('data', 'processed', 'video_chunks'),
-#     shape_filter: tuple = None,
-#     order_by: callable = lambda x: x,
-#     transform: callable = lambda x: x
-# ) -> list:
-    # processed_tensors = []
-    
-    # # Get all pickle files in directory and filter for video chunks only
-    # pickle_files = [
-    #     f for f in os.listdir(directory) 
-    #     if f.endswith('.pkl') and f.startswith('video_chunk_')
-    # ]
-    
-    # # Sort files based on order_by function
-    # pickle_files.sort(key=order_by)
-    
-    # for pickle_file in pickle_files:
-    #     chunk_data = load_video_chunk(os.path.join(directory, pickle_file))
-    #     tensor = CustomTensor(chunk_data['frames'])
-        
-    #     # Apply shape filter if specified
-    #     if shape_filter and tensor.shape != shape_filter:
-    #         continue
-            
-    #     # Apply transformation
-    #     transformed_tensor = transform(tensor)
-    #     processed_tensors.append(transformed_tensor)
-    
-    # return processed_tensors
-
 def main():
+    import time
+    start_time = time.time()
+    print(f"\nExecution time start: {start_time:.2f} seconds")
+    
     directory = os.path.join('data', 'processed', 'video_chunks')
     target_shape = (100, 360, 640, 3)
 
@@ -84,6 +57,11 @@ def main():
     print("\nRed channel of first frame:", tensor[0, :, :, 0])
     print("Green channel of first frame:", tensor[0, :, :, 1])
     print("Blue channel of first frame:", tensor[0, :, :, 2])
+
+     # Add at the very end of main(), before the if __name__ == "__main__":
+    end_time = time.time()
+    print(f"\nExecution time ends: {end_time:.2f} seconds")
+    print(f"\n======================> Execution time: {end_time - start_time:.2f} seconds")
 
 if __name__ == "__main__":
     main()
