@@ -29,6 +29,35 @@ def main():
         transform=transform_func
     )
 
+    def slice_printing(tensor):
+        # After loading the tensor, add these slicing examples
+        print("\nAdvanced slicing examples:")
+        
+        # Get every other frame from first 10 frames
+        print("Every other frame shape:", tensor[:10:2].shape)
+        
+        # Get center crop of all frames
+        center_crop = tensor[:, 90:270, 160:480]
+        print("Center crop shape:", center_crop.shape)
+        
+        # Get specific color channel for all frames
+        red_channel = tensor[..., 0]  # Using ellipsis notation
+        print("All red channels shape:", red_channel.shape)
+        
+        # Multiple dimension slicing
+        subset = tensor[10:20, ::2, ::2]  # frames 10-20, every 2nd pixel
+        print("Subsampled frames shape:", subset.shape)
+        
+        # Boolean indexing
+        bright_pixels = tensor > 0.5
+        print("Bright pixels mask shape:", bright_pixels.shape)
+        
+        # Fancy indexing
+        specific_frames = tensor[[0, 5, 10, 15]]  # Get specific frames
+        print("Selected frames shape:", specific_frames.shape)
+
+
+    slice_printing(tensor)
     # Print more detailed information about the tensor
     print("\nTensor statistics:")
     print(f"Min value: {tensor.min().item()}")
