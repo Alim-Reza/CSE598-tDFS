@@ -6,7 +6,6 @@ A Python-based system for efficient video processing and tensor manipulation, bu
 
 - Windows 10/11
 - Python 3.8+
-- CUDA-compatible GPU (optional)
 - 8GB RAM minimum
 
 ## Installation
@@ -14,16 +13,19 @@ A Python-based system for efficient video processing and tensor manipulation, bu
 1. Clone the repository:
 ```bash
 git clone https://github.com/alim-reza/CSE598-tDFS.git
-cd CSE598-tDFS```
-
+cd CSE598-tDFS
+```
 2. Install dependencies:
-```pip install -r requirements.txt```
+```bash
+pip install -r requirements.txt
+```
 
 ## Project Structure
 
-```CSE598-tDFS/
+```bash
+CSE598-tDFS/
 ├── config/
-│   └── paths.py          # Centralized path configuration
+│   └── paths.py          # Centralized path configuration, TODO: Not done yet
 ├── src/
 │   ├── utils/
 │   │   ├── __init__.py
@@ -35,4 +37,25 @@ cd CSE598-tDFS```
 │   │   └── videos/      # Place input videos here
 │   └── processed/
 │       └── video_chunks/ # Processed pickle files
-└── main.py              # Main execution script```
+└── main.py              # Main execution script
+```
+
+## Command for running:
+1. For generating the pickle files
+```bash
+python .\code\src\utils\video_processor.py
+```
+
+make sure to update the file path with ur own directory name, on the video_processor.py
+```
+video_path = 'E:\\CSE598-tDFS\\code\\data\\raw\\videos\\main_video.mp4'
+chunks_dir = 'E:\\CSE598-tDFS\\code\\data\\processed\\video_chunks'
+```
+2. For viewing the pickle file : (can be viewed by both image and array file)
+```bash
+python .\code\src\utils\view_pickle.py
+```
+3. For seeing  the PickleTensor class in action:
+```bash
+python main.py
+```
