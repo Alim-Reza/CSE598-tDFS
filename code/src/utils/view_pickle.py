@@ -71,7 +71,7 @@ def view_pickle_content(pickle_path):
             print(f"\n{key}: {data[key]}")
 
 if __name__ == "__main__":
-    chunks_dir = os.path.join('data', 'processed', 'video_chunks')
+    chunks_dir = os.path.join('code', 'data', 'processed', 'video_chunks')
     
     # List all pickle files
     pickle_files = [f for f in os.listdir(chunks_dir) if f.endswith('.pkl')]
