@@ -1,5 +1,6 @@
 ## Summarize Findings
 
+how to build the docker images\
 your text goes here\
 your text goes here
 
