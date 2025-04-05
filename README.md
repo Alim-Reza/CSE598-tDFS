@@ -57,5 +57,12 @@ python .\code\src\utils\view_pickle.py
 ```
 3. For seeing  the PickleTensor class in action:
 ```bash
+cd code
 python main.py
+```
+
+4. For testing the PickleTensor class with the actual PyTorch Tensor class:
+```bash
+cd code
+python -m unittest .\tests\test_tensor_comparison.py
 ```
