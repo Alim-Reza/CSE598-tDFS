@@ -17,9 +17,9 @@ def main():
     def transform_func(x):
         frames = [frame.astype('float32') / 255.0 for frame in x]
         # Verify data isn't all zeros
-        if len(frames) > 0:
-            print(f"Sample values from first frame:")
-            print(f"Min: {frames[0].min()}, Max: {frames[0].max()}, Mean: {frames[0].mean()}")
+        # if len(frames) > 0:
+        #     print(f"Sample values from first frame:")
+        #     print(f"Min: {frames[0].min()}, Max: {frames[0].max()}, Mean: {frames[0].mean()}")
         return frames
 
     tensor = PickleTensor.load_from_pickles(
