@@ -1,0 +1,187 @@
+MongoDB is a popular NoSQL database that stores data in a flexible, JSON-like format called BSON (Binary JSON). MongoDB is ideal for applications that deal with large volumes of unstructured or semi-structured data.
+
+Key Features:
+Document-Oriented: Data is stored as documents in collections, which are analogous to rows in tables.
+Schema-less: Can store documents with different structures in the same collection.
+Scalable: Supports horizontal scaling via sharding (distributing data across multiple servers).
+High Performance: Optimized for read/write throughput and real-time analytics.
+Indexing: Supports a variety of index types for fast queries.
+Replication: Provides high availability through replica sets.
+
+
+Step-by-step guide to using MongoDB:
+
+-Installing MongoDB
+-Setting up MongoDB locally
+-Installing Python MongoDB driver (pymongo)
+-Connecting Python to MongoDB
+-Saving and retrieving tensor-related data (e.g. from .pkl files)
+-Showing slices of tensors stored in MongoDB
+
+Step 1- Install MongoDB:
+
+On Windows/macOS:
+Go to https://www.mongodb.com/try/download/community.
+Download MongoDB Community Server.
+Install with default settings and select “Run as a service.”
+Optionally install MongoDB Compass for GUI access.
+
+Linux:
+# Add MongoDB repository
+sudo apt update
+sudo apt install -y mongodb
+
+# Start the service
+sudo systemctl start mongodb
+sudo systemctl enable mongodb
+
+# Check it is running
+sudo systemctl status mongodb
+
+
+Step 2- Connect MongoDB to Python (Using pymongo)
+
+Install the driver: pip install pymongo
+Sample connection code:
+from pymongo import MongoClient
+
+# Connect to MongoDB
+client = MongoClient("mongodb://localhost:27017/")
+
+# Access a database
+db = client["tensor_file_system"]
+
+# Access a collection
+collection = db["tensors"]
+
+
+Step 3- Store Tensors from .pkl into MongoDB
+# Save a PyTorch tensor into a .pkl file
+import torch
+import pickle
+
+tensor = torch.randn(5, 3)  # example tensor
+with open("tensor_data.pkl", "wb") as f:
+    pickle.dump(tensor, f)
+
+Then store it in MongoDB:
+from bson.binary import Binary
+import pickle
+from pymongo import MongoClient
+
+client = MongoClient("mongodb://localhost:27017/")
+db = client["tensor_file_system"]
+collection = db["tensors"]
+
+# Load tensor
+with open("tensor_data.pkl", "rb") as f:
+    tensor = pickle.load(f)
+
+# Store as binary
+collection.insert_one({
+    "name": "tensor1",
+    "shape": list(tensor.shape),
+    "data": Binary(pickle.dumps(tensor))
+})
+
+
+Step 4- Retrieve and Slice Tensor from MongoDB:
+import pickle
+from pymongo import MongoClient
+
+client = MongoClient("mongodb://localhost:27017/")
+db = client["tensor_file_system"]
+collection = db["tensors"]
+
+# Retrieve document
+doc = collection.find_one({"name": "tensor1"})
+
+if doc:
+    tensor = pickle.loads(doc["data"])
+    print("Full Tensor:", tensor)
+    print("Slice [0:2]:", tensor[0:2])
+else:
+    print("Tensor not found")
+
+
+
+Project Structure (Organized Code):
+
+tensor_file_system/
+├── db.py              # Handles DB connection
+├── save_tensor.py     # Loads pickle & saves tensor
+├── load_tensor.py     # Loads tensor from DB and slices it
+├── tensor_data.pkl    # Your example pickle file
+ 
+
+db.py:
+
+from pymongo import MongoClient
+
+def get_db():
+    client = MongoClient("mongodb://localhost:27017/")
+    return client["tensor_file_system"]
+
+
+save_tensor.py:
+
+import pickle
+from bson.binary import Binary
+from db import get_db
+
+def save_tensor(name, path):
+    with open(path, "rb") as f:
+        tensor = pickle.load(f)
+
+    db = get_db()
+    db["tensors"].insert_one({
+        "name": name,
+        "shape": list(tensor.shape),
+        "data": Binary(pickle.dumps(tensor))
+    })
+
+# Example usage
+if __name__ == "__main__":
+    save_tensor("tensor1", "tensor_data.pkl")
+
+
+load_tensor.py:
+
+import pickle
+from db import get_db
+
+def load_and_slice(name, start=0, end=2):
+    db = get_db()
+    doc = db["tensors"].find_one({"name": name})
+
+    if doc:
+        tensor = pickle.loads(doc["data"])
+        print("Full Tensor:", tensor)
+        print(f"Slice [{start}:{end}]:", tensor[start:end])
+    else:
+        print("Tensor not found")
+
+# Example usage
+if __name__ == "__main__":
+    load_and_slice("tensor1", 0, 2)
+
+---------------------------------------------------------------------------------------------------
+
+Alternate: Use MongoDB Atlas (Cloud Hosting)
+
+If we want MongoDB online:
+
+Go to: https://www.mongodb.com/cloud/atlas
+
+Create a free-tier cluster
+
+Add your IP (or 0.0.0.0/0) to whitelist
+
+Create a database user
+
+Get the connection string (e.g., mongodb+srv://username:password@cluster0.mongodb.net/tensor_file_system)
+
+Use it in your Python code like:
+
+MongoClient("mongodb+srv://username:password@cluster0.mongodb.net/tensor_file_system")
+
