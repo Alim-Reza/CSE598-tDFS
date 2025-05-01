@@ -1,0 +1,86 @@
+version: '2'
+services:
+  namenode:
+    image: bde2020/hadoop-namenode:2.0.0-hadoop2.7.4-java8
+    container_name: namenode
+    environment:
+      - CLUSTER_NAME=my-hdfs-cluster
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+    ports:
+      - "9870:9870"  # HDFS NameNode Web UI
+      - "9000:9000"  # HDFS RPC
+    volumes:
+      - hdfs_namenode:/hadoop/dfs/name
+      - /home/CSE598-tDFS:/shared/CSE598-tDFS
+      - ./config/hdfs-site.xml:/etc/hadoop/hdfs-site.xml
+    networks:
+      - hadoopnet
+
+  datanode1:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
+    hostname: datanode1
+    container_name: datanode1
+    environment:
+      - CLUSTER_NAME=my-hdfs-cluster
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_DATANODE_ADDRESS=0.0.0.0:10201
+      - HDFS_DATANODE_HTTP_ADDRESS=0.0.0.0:9864
+      - HDFS_DATANODE_IPC_ADDRESS=0.0.0.0:10203
+    ports:
+      - "10102:9864"  # WebHDFS HTTP endpoint
+    volumes:
+      - hdfs_datanode1:/hadoop/dfs/data
+      - ./config/datanode1/hdfs-site.xml:/etc/hadoop/hdfs-site.xml
+    networks:
+      - hadoopnet
+    depends_on:
+      - namenode
+
+  datanode2:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
+    hostname: datanode2
+    container_name: datanode2
+    environment:
+      - CLUSTER_NAME=my-hdfs-cluster
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_DATANODE_ADDRESS=0.0.0.0:10201
+      - HDFS_DATANODE_HTTP_ADDRESS=0.0.0.0:9864
+      - HDFS_DATANODE_IPC_ADDRESS=0.0.0.0:10203
+    ports:
+      - "10202:9864"
+    volumes:
+      - hdfs_datanode2:/hadoop/dfs/data
+      - ./config/datanode2/hdfs-site.xml:/etc/hadoop/hdfs-site.xml
+    networks:
+      - hadoopnet
+    depends_on:
+      - namenode
+
+  datanode3:
+    image: bde2020/hadoop-datanode:2.0.0-hadoop2.7.4-java8
+    hostname: datanode3
+    container_name: datanode3
+    environment:
+      - CLUSTER_NAME=my-hdfs-cluster
+      - CORE_CONF_fs_defaultFS=hdfs://namenode:9000
+      - HDFS_DATANODE_ADDRESS=0.0.0.0:10201
+      - HDFS_DATANODE_HTTP_ADDRESS=0.0.0.0:9864
+      - HDFS_DATANODE_IPC_ADDRESS=0.0.0.0:10203
+    ports:
+      - "10302:9864"
+    volumes:
+      - hdfs_datanode3:/hadoop/dfs/data
+      - ./config/datanode3/hdfs-site.xml:/etc/hadoop/hdfs-site.xml
+    networks:
+      - hadoopnet
+    depends_on:
+      - namenode
+
+volumes:
+  hdfs_namenode:
+  hdfs_datanode1:
+  hdfs_datanode2:
+  hdfs_datanode3:
+
+networks:
+  hadoopnet:
