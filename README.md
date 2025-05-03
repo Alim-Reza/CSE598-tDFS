@@ -3,7 +3,7 @@
 A Python-based system for efficient video processing and tensor manipulation, built on PyTorch.
 
 The colab file for the project is here:
-distributed_file_load_for_tensor.ipynb
+[distributed_file_load_for_tensor.ipynb](https://github.com/Alim-Reza/CSE598-tDFS/blob/custom-tensor/code/distributed_file_load_for_tensor.ipynb)
 ## System Requirements
 
 - Windows 10/11
