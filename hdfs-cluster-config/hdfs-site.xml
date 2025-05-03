@@ -23,11 +23,11 @@
     </property>
     <property>
         <name>dfs.datanode.use.datanode.hostname</name>
-        <value>false</value>
+        <value>true</value>
     </property>
     <property>
         <name>dfs.client.use.datanode.hostname</name>
-        <value>false</value>
+        <value>true</value>
     </property>
     <property>
         <name>dfs.webhdfs.enabled</name>
@@ -37,6 +37,10 @@
     <property>
     	<name>dfs.datanode.http.hostname</name>
     	<value>160.191.162.36</value>
+    </property>
+    <property>
+        <name>dfs.datanode.hostname</name>
+        <value>160.191.162.36</value> <!-- your VPS public IP -->
     </property>
 
     <property>
