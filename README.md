@@ -2,6 +2,8 @@
 
 A Python-based system for efficient video processing and tensor manipulation, built on PyTorch.
 
+The colab file for the project is here:
+distributed_file_load_for_tensor.ipynb
 ## System Requirements
 
 - Windows 10/11
@@ -66,3 +68,4 @@ python main.py
 cd code
 python -m unittest .\tests\test_tensor_comparison.py
 ```
+
