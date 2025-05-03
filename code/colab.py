@@ -1,3 +1,12 @@
+# ==================== CONFIGURATION ====================
+HDFS_HOST = "160.191.162.36"
+WEBHDFS_PORT = 9870
+HDFS_BASE_PATH = "/user/pickles"  # No trailing slash
+FILES_TO_FETCH = ["video_chunk_10.pkl.xz", "video_chunk_50.pkl.xz"]
+
+LOCAL_DOWNLOAD_DIR = '/content/hdfs_files'
+
+MAX_PARALLEL_JOBS = 8
 # ====================================================================
 
 import os
