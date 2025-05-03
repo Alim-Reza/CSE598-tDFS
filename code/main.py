@@ -1,6 +1,7 @@
 # from src.custom_tensor import CustomTensor
 # from src.utils.video_processor import load_video_chunk
 from src.pickle_tensor import PickleTensor
+from src.redis_handler import RedisHandler
 import os
 
 def main():
@@ -8,15 +9,19 @@ def main():
     start_time = time.time()
     print(f"\nExecution time start: {start_time:.2f} seconds")
     
+    # Initialize Redis handler
+    redis_handler = RedisHandler()
+    if not redis_handler.is_connected():
+        print("Warning: Redis connection failed. Continuing without caching.")
+    
     directory = os.path.join('data', 'processed', 'video_chunks')
     target_shape = (100, 360, 640, 3)
 
     order_func = lambda x: int(x.split('_')[-1].split('.')[0])
     
-    # Modified transform function to verify data
+    # Modified transform function to use Redis caching
     def transform_func(x):
         frames = [frame.astype('float32') / 255.0 for frame in x]
-        # Verify data isn't all zeros
         if len(frames) > 0:
             print(f"Sample values from first frame:")
             print(f"Min: {frames[0].min()}, Max: {frames[0].max()}, Mean: {frames[0].mean()}")
