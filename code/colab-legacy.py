@@ -39,14 +39,18 @@ def decompress_and_load_xz_pickle(file_path):
         print(f"Failed to load {file_path}: {e}")
         return None
 
-# ------------------ DOWNLOAD IN PARALLEL ------------------
-with concurrent.futures.ThreadPoolExecutor() as executor:
-    downloaded_files = list(executor.map(download_file, FILES_TO_FETCH))
-    downloaded_files = [f for f in downloaded_files if f]
 
+def download_files_parallel(file_names):
+# ------------------ DOWNLOAD IN PARALLEL ------------------
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        downloaded_files = list(executor.map(download_file, FILES_TO_FETCH))
+        downloaded_files = [f for f in downloaded_files if f]
+    return downloaded_files
+def decompress_files_in_parallel(file_paths):
 # ------------------ DECOMPRESS AND LOAD PARALLEL ------------------
-with concurrent.futures.ThreadPoolExecutor() as executor:
-    loaded_objects = list(executor.map(decompress_and_load_xz_pickle, downloaded_files))
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        loaded_objects = list(executor.map(decompress_and_load_xz_pickle, downloaded_files))
+    return loaded_objects
 
 # You now have the uncompressed pickle objects in `loaded_objects`
 for i, obj in enumerate(loaded_objects):

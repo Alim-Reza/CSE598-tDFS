@@ -18,47 +18,7 @@ def decompress_and_load(data_tuple):
         return None
 
 class PickleTensor(torch.Tensor):
-    def __new__(cls, *args, **kwargs):
-        return super(PickleTensor, cls).__new__(cls, *args, **kwargs)
-
-    @staticmethod
-    def load_from_pickles(
-        directory: str,
-        target_shape: Tuple[int, ...],
-        order_by: Callable = lambda x: x,
-        transform: Callable = lambda x: x
-    ) -> 'PickleTensor':
-        # Get and sort pickle files
-        pickle_files = [f for f in os.listdir(directory) 
-                       if f.endswith('.pkl') and f.startswith('video_chunk_')]
-        pickle_files.sort(key=order_by)
-        
-        # Pre-allocate tensor with correct shape and dtype
-        result = torch.empty(target_shape, dtype=torch.float32)
-        
-        # Process files one at a time
-        current_frame = 0
-        for pickle_file in pickle_files:
-            with open(os.path.join(directory, pickle_file), 'rb') as f:
-                data = pickle.load(f)
-                if 'frames' in data:
-                    frames = data['frames']
-                    # Transform frames one at a time
-                    for frame in frames:
-                        if current_frame >= target_shape[0]:
-                            break
-                        # Process single frame
-                        processed_frame = transform([frame])[0]
-                        result[current_frame] = torch.from_numpy(processed_frame)
-                        current_frame += 1
-        
-        return PickleTensor(result)
-
-    @classmethod
-    def __torch_function__(cls, func, types, args=(), kwargs=None):
-        if kwargs is None:
-            kwargs = {}
-        return super().__torch_function__(func, types, args, kwargs)
+    # ... existing __new__ and other methods ...
 
     def slice_to_pickle_files(self, slice_obj) -> List[str]:
         """Convert a slice to required pickle file names"""
@@ -80,7 +40,8 @@ class PickleTensor(torch.Tensor):
         print(f"\nPreparing to download {len(files_to_fetch)} files:")
         for f in files_to_fetch:
             print(f"  - {f}")
-        
+
+
         # Download and decompress using ThreadPoolExecutor
         with concurrent.futures.ThreadPoolExecutor() as executor:
             # Download files
@@ -136,3 +97,19 @@ class PickleTensor(torch.Tensor):
 
         # Convert to tensor
         return torch.from_numpy(np.array(all_frames))
+
+
+        
+config = {
+    'host': '160.191.162.36',
+    'port': 9870,
+    'base_path': '/user/pickles'
+}
+# target_shape = (500, 360, 640, 3)  
+tensor = PickleTensor()
+
+frames = tensor.load_slice_data(
+    slice(50, 450),
+    transform_func=lambda x: [frame.astype('float32') / 255.0 for frame in x],
+    hdfs_config=config
+)
